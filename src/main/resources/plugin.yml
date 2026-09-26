@@ -1,0 +1,43 @@
+name: BanSystem
+version: '${version}'
+main: de.angriffscores.bansystem.BanSystemPlugin
+api-version: '26.2'
+author: AngriffsCores
+description: Ban and mute system with PostgreSQL storage
+libraries:
+  - org.postgresql:postgresql:42.7.4
+  - com.zaxxer:HikariCP:6.2.1
+
+commands:
+  ban:
+    description: Permanently ban a player
+    usage: /ban <player> <reason>
+    permission: bansystem.ban
+  unban:
+    description: Unban a player
+    usage: /unban <player>
+    permission: bansystem.unban
+  mute:
+    description: Permanently mute a player
+    usage: /mute <player> <reason>
+    permission: bansystem.mute
+  unmute:
+    description: Unmute a player
+    usage: /unmute <player>
+    permission: bansystem.unmute
+  tempban:
+    description: Temporarily ban a player
+    usage: /tempban <player> <reason> <duration>
+    permission: bansystem.tempban
+  tempmute:
+    description: Temporarily mute a player
+    usage: /tempmute <player> <reason> <duration>
+    permission: bansystem.tempmute
+  banlog:
+    description: Show punishment history of a player
+    usage: /banlog <player>
+    permission: bansystem.banlog
+  kick:
+    description: Kick a player from the server
+    usage: /kick <player> <reason>
+    permission: bansystem.kick
