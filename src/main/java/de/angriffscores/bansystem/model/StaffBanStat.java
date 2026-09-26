@@ -1,12 +1,10 @@
 package de.angriffscores.bansystem.model;
 
-import java.time.Instant;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 
 /**
  * @author AngriffsCores
@@ -15,8 +13,8 @@ import org.jspecify.annotations.Nullable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlayerRecord {
-    private @NonNull UUID uuid;
-    private @NonNull String name;
-    private @Nullable Instant lastSeen;
+public class StaffBanStat {
+    private @NonNull UUID staffUuid;
+    private @NonNull String staffName;
+    private long banCount;
 }

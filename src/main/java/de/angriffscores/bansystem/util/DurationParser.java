@@ -13,12 +13,8 @@ import org.jspecify.annotations.NonNull;
  * @since 26.09.2026
  */
 public final class DurationParser {
-
     private static final Pattern TOKEN_PATTERN = Pattern.compile("(\\d+)([smhdw])", Pattern.CASE_INSENSITIVE);
     private static final Pattern FULL_PATTERN = Pattern.compile("^(?:\\d+[smhdw])+$", Pattern.CASE_INSENSITIVE);
-
-    private DurationParser() {
-    }
 
     /**
      * Parses durations like {@code 30m}, {@code 2h}, {@code 1d} or {@code 1d2h30m}.

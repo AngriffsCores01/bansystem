@@ -41,3 +41,20 @@ commands:
     description: Kick a player from the server
     usage: /kick <player> <reason>
     permission: bansystem.kick
+  check:
+    description: Show active punishments of a player
+    usage: /check <player>
+    permission: bansystem.check
+    aliases: [baninfo]
+  banlist:
+    description: List active bans
+    usage: /banlist
+    permission: bansystem.banlist
+  mutelist:
+    description: List active mutes
+    usage: /mutelist
+    permission: bansystem.mutelist
+  banstats:
+    description: Show ban statistics per staff member
+    usage: /banstats
+    permission: bansystem.banstats

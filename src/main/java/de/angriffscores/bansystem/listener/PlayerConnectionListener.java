@@ -22,7 +22,6 @@ import org.jspecify.annotations.NonNull;
  */
 @RequiredArgsConstructor
 public class PlayerConnectionListener implements Listener {
-
     private final @NonNull JavaPlugin plugin;
     private final @NonNull PlayerService playerService;
     private final @NonNull PunishmentService punishmentService;

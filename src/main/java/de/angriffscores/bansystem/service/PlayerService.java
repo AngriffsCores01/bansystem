@@ -19,7 +19,6 @@ import org.jspecify.annotations.NonNull;
  */
 @RequiredArgsConstructor
 public class PlayerService {
-
     private final @NonNull PlayerRepository playerRepository;
 
     /**

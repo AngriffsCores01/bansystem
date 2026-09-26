@@ -1,9 +1,13 @@
 package de.angriffscores.bansystem;
 
 import de.angriffscores.bansystem.command.BanCommand;
+import de.angriffscores.bansystem.command.BanListCommand;
 import de.angriffscores.bansystem.command.BanLogCommand;
+import de.angriffscores.bansystem.command.BanStatsCommand;
+import de.angriffscores.bansystem.command.CheckCommand;
 import de.angriffscores.bansystem.command.KickCommand;
 import de.angriffscores.bansystem.command.MuteCommand;
+import de.angriffscores.bansystem.command.MuteListCommand;
 import de.angriffscores.bansystem.command.TempBanCommand;
 import de.angriffscores.bansystem.command.TempMuteCommand;
 import de.angriffscores.bansystem.command.UnbanCommand;
@@ -28,7 +32,6 @@ import org.jspecify.annotations.Nullable;
  * @since 26.09.2026
  */
 public final class BanSystemPlugin extends JavaPlugin {
-
     private @Nullable Database database;
     private @Nullable PunishmentService punishmentService;
 
@@ -74,6 +77,10 @@ public final class BanSystemPlugin extends JavaPlugin {
                 new BanLogCommand(this, playerService, this.punishmentService, messageService)
         );
         this.registerCommand("kick", new KickCommand(this, playerService, this.punishmentService, messageService));
+        this.registerCommand("check", new CheckCommand(this, playerService, this.punishmentService, messageService));
+        this.registerCommand("banlist", new BanListCommand(this, playerService, this.punishmentService, messageService));
+        this.registerCommand("mutelist", new MuteListCommand(this, playerService, this.punishmentService, messageService));
+        this.registerCommand("banstats", new BanStatsCommand(this, playerService, this.punishmentService, messageService));
 
         this.getServer().getPluginManager().registerEvents(
                 new PlayerConnectionListener(this, playerService, this.punishmentService, messageService),

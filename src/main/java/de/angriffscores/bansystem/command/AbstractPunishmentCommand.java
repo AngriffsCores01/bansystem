@@ -27,7 +27,6 @@ import org.jspecify.annotations.Nullable;
  */
 @RequiredArgsConstructor
 public abstract class AbstractPunishmentCommand implements CommandExecutor, TabCompleter {
-
     protected final @NonNull JavaPlugin plugin;
     protected final @NonNull PlayerService playerService;
     protected final @NonNull PunishmentService punishmentService;

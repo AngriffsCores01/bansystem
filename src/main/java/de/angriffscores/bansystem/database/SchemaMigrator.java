@@ -12,7 +12,6 @@ import org.jspecify.annotations.NonNull;
  */
 @RequiredArgsConstructor
 public final class SchemaMigrator {
-
     private final @NonNull Database database;
 
     /**

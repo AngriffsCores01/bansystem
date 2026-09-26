@@ -1,8 +1,10 @@
 package de.angriffscores.bansystem.repository;
 
 import de.angriffscores.bansystem.database.Database;
+import de.angriffscores.bansystem.model.ActivePunishmentEntry;
 import de.angriffscores.bansystem.model.Punishment;
 import de.angriffscores.bansystem.model.PunishmentType;
+import de.angriffscores.bansystem.model.StaffBanStat;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,7 +26,6 @@ import org.jspecify.annotations.NonNull;
  */
 @RequiredArgsConstructor
 public class PunishmentRepository {
-
     private final @NonNull Database database;
 
     /**
@@ -202,6 +203,70 @@ public class PunishmentRepository {
                 Statement statement = connection.createStatement()) {
             statement.executeUpdate(sql);
         }
+    }
+
+    /**
+     * @param type punishment type
+     * @param limit max rows
+     * @return active punishments with target names
+     * @throws SQLException if the query fails
+     */
+    public @NonNull List<ActivePunishmentEntry> findActiveByType(
+            @NonNull PunishmentType type,
+            int limit
+    ) throws SQLException {
+        String sql = """
+                SELECT p.*, COALESCE(pl.name, 'Unknown') AS target_name
+                FROM punishments p
+                LEFT JOIN players pl ON pl.uuid = p.target_uuid
+                WHERE p.type = ?
+                  AND p.active = TRUE
+                  AND (p.expires_at IS NULL OR p.expires_at > NOW())
+                ORDER BY p.created_at DESC
+                LIMIT ?
+                """;
+        List<ActivePunishmentEntry> entries = new ArrayList<>();
+        try (Connection connection = this.database.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, type.name());
+            statement.setInt(2, limit);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    entries.add(new ActivePunishmentEntry(
+                            this.map(resultSet),
+                            resultSet.getString("target_name")
+                    ));
+                }
+            }
+        }
+        return entries;
+    }
+
+    /**
+     * @return ban counts per staff member, highest first
+     * @throws SQLException if the query fails
+     */
+    public @NonNull List<StaffBanStat> findBanStatsByStaff() throws SQLException {
+        String sql = """
+                SELECT staff_uuid, staff_name, COUNT(*) AS ban_count
+                FROM punishments
+                WHERE type = 'BAN'
+                GROUP BY staff_uuid, staff_name
+                ORDER BY ban_count DESC, staff_name ASC
+                """;
+        List<StaffBanStat> stats = new ArrayList<>();
+        try (Connection connection = this.database.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql);
+                ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                stats.add(new StaffBanStat(
+                        (UUID) resultSet.getObject("staff_uuid"),
+                        resultSet.getString("staff_name"),
+                        resultSet.getLong("ban_count")
+                ));
+            }
+        }
+        return stats;
     }
 
     private @NonNull Punishment map(@NonNull ResultSet resultSet) throws SQLException {

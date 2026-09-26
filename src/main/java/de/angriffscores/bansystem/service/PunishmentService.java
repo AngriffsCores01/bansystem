@@ -1,8 +1,10 @@
 package de.angriffscores.bansystem.service;
 
+import de.angriffscores.bansystem.model.ActivePunishmentEntry;
 import de.angriffscores.bansystem.model.PlayerRecord;
 import de.angriffscores.bansystem.model.Punishment;
 import de.angriffscores.bansystem.model.PunishmentType;
+import de.angriffscores.bansystem.model.StaffBanStat;
 import de.angriffscores.bansystem.repository.PunishmentRepository;
 import de.angriffscores.bansystem.util.DurationParser;
 import java.sql.SQLException;
@@ -27,7 +29,6 @@ import org.jspecify.annotations.Nullable;
  */
 @RequiredArgsConstructor
 public class PunishmentService {
-
     private final @NonNull JavaPlugin plugin;
     private final @NonNull PunishmentRepository punishmentRepository;
     private final @NonNull MessageService messageService;
@@ -157,6 +158,38 @@ public class PunishmentService {
                 return this.punishmentRepository.findHistory(targetUuid);
             } catch (SQLException exception) {
                 throw new IllegalStateException("Failed to load banlog", exception);
+            }
+        });
+    }
+
+    /**
+     * @param type punishment type
+     * @param limit max entries
+     * @return active punishments of the given type
+     */
+    public @NonNull CompletableFuture<List<ActivePunishmentEntry>> findActiveList(
+            @NonNull PunishmentType type,
+            int limit
+    ) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                this.punishmentRepository.deactivateExpired();
+                return this.punishmentRepository.findActiveByType(type, limit);
+            } catch (SQLException exception) {
+                throw new IllegalStateException("Failed to load active punishments", exception);
+            }
+        });
+    }
+
+    /**
+     * @return ban statistics per staff member
+     */
+    public @NonNull CompletableFuture<List<StaffBanStat>> findBanStats() {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return this.punishmentRepository.findBanStatsByStaff();
+            } catch (SQLException exception) {
+                throw new IllegalStateException("Failed to load ban stats", exception);
             }
         });
     }

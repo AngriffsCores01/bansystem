@@ -16,7 +16,6 @@ import org.jspecify.annotations.Nullable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Punishment {
-
     private long id;
     private @NonNull UUID targetUuid;
     private @NonNull PunishmentType type;
